@@ -21,6 +21,10 @@ const LoginPage = () => {
 
       // Store the token in local storage or a cookie
       localStorage.setItem('token', response.data.token);
+
+      // Set the authentication token in the headers
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
       window.location.href="/";
     } catch (error) {
       setError(error.response.data.error);

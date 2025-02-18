@@ -20,3 +20,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=128, write_only=True)

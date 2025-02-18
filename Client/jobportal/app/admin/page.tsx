@@ -8,6 +8,7 @@ interface Job {
   company: string;
   salary: string;
   posted_by: string;
+  category: string;
 }
 
 const JobPostingForm = () => {
@@ -18,6 +19,7 @@ const JobPostingForm = () => {
     company: '',
     salary: '',
     posted_by: '',
+    category: 'Other',
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -34,10 +36,19 @@ const JobPostingForm = () => {
       .catch((error) => console.error(error));
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setJob({ ...job, [name]: value });
   };
+
+  const categories = [
+    'Software Development',
+    'Data Science',
+    'Product Management',
+    'Design',
+    'Marketing',
+    'Other',
+  ];
 
   return (
     <form onSubmit={handleSubmit}>
@@ -64,6 +75,16 @@ const JobPostingForm = () => {
       <label>
         Posted By:
         <input type="text" name="posted_by" value={job.posted_by} onChange={handleChange} />
+      </label>
+      <label>
+        Category:
+        <select name="category" value={job.category} onChange={handleChange}>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
       </label>
       <button type="submit">Post Job</button>
     </form>

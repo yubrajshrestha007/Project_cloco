@@ -3,10 +3,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
-
-from applications import models
-from .serializers import UserSerializer, RegisterSerializer
-from rest_framework.authtoken.views import ObtainAuthToken
+from .serializers import LoginSerializer, UserSerializer, RegisterSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
@@ -14,32 +11,29 @@ from rest_framework import status
 
 User = get_user_model()
 
-# ✅ User Registration
-
-
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
-# ✅ Get Current User (Profile)
 
-
-class LoginView(APIView):
+class LoginView(generics.CreateAPIView):
+    Serializer_class=LoginSerializer
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
-
         user = authenticate(username=username, password=password)
-
         if user is not None:
-            token, created = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
+            User_Serializer=UserSerializer(user)
             return Response({
-                'token': token.key,
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user":User_Serializer.data
             })
         else:
             return Response({
-                'error': 'Invalid username or password',
+                "error": "Invalid username or password",
             }, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -49,7 +43,6 @@ class UserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# ✅ Logout User (Blacklist Token)
 
 
 class LogoutView(generics.GenericAPIView):
