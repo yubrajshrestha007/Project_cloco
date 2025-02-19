@@ -1,0 +1,12 @@
+The following are the requirements for the project:
+-Login:
+    -The user should be able to login with their username and password.
+-Registration:
+  -The user should be able to register with their username, email, and password and is_employer default to False.
+-Home:
+  -The user can see all the jobs,search,and categorical view of jobs.
+-Admin:
+  -The admin can see all the users, and view and add the jobs.
+-Jobs:
+  -The user can view the job details
+  -The user can apply for the job
