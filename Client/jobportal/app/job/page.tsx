@@ -1,16 +1,26 @@
 'use client'
 import { useState, useEffect } from "react";
 import axios from "axios";
+import useAuth from'../../hooks/useAuth';
 
 export default function Home() {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/jobs/")
+    axios.get("http://localhost:8000/api/jobs/jobs/",
+{
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem('access')}` },
+          withCredentials: true, // Ensures cookies are sent
+        }
+    )
       .then(response => {
+        if(response.status === 200){
+            setIsAuthenticated(true)
+        }
         setJobs(response.data);
         const categories = Array.from(new Set(response.data.map(job => job.category)));
         setCategories(categories);
@@ -46,6 +56,15 @@ export default function Home() {
   };
 
   const filteredJobs = searchJobs(jobs, searchQuery, selectedCategory);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto">
+        <h1 className="text-3xl font-bold">You are not authenticated</h1>
+        <p>Please login to access the job listings</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto">

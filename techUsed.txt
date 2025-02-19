@@ -1,0 +1,17 @@
+Backend: Django REST Framework
+
+Use Case: High-performance API with robust backend features.
+User Authentication and Authorization: Securely manages user accounts and permissions.
+Job Posting and Searching: Allows posting and efficient searching of various job listings.
+Admin Panel and Dashboard: Enables effective management of the application and monitoring of activities.
+Frontend: Next.js
+
+Use Case: Development of a dynamic, responsive user interface.
+Building the Frontend: Ensures a smooth and interactive web experience.
+User Interface and User Experience: Enhances usability and accessibility for users.
+Database: SQLite
+
+Use Case: Lightweight database engine.
+Data Storage: Efficiently stores user data and job postings with easy management.
+Job Portal Overview:
+The job portal aims to list jobs posted by an admin, allowing users to search, filter, and apply for jobs easily.
