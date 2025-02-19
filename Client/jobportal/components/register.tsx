@@ -19,8 +19,8 @@ export default function SignupForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", is_employer: false });
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [formData, setFormData] = useState({ name: "", email: "", password: "",address:'', is_employer: false });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string ; address?: string }>({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const router = useRouter();
@@ -74,6 +74,7 @@ export default function SignupForm({
     username: formData.name,
     email: formData.email,
     password: formData.password,
+    Address:formData.address,
     is_employer: formData.is_employer,
   }),
 });
@@ -115,6 +116,12 @@ export default function SignupForm({
                 <Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} className="bg-white text-black border-gray-300" />
                 {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
               </div>
+              <div className="grid gap-2">
+              <Label htmlFor="address">Address</Label>
+                <Input id="email" name="address" type="text" placeholder="" value={formData.address} onChange={handleChange} className="bg-white text-black border-gray-300" />
+                {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+              </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" name="password" type="password" placeholder="Enter Your Password" value={formData.password} onChange={handleChange} className="bg-white text-black border-gray-300 focus:border-green-500" />
