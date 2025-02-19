@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 const LoginPage = ({ className, ...props }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -40,7 +40,7 @@ const LoginPage = ({ className, ...props }) => {
         }
       );
 
-      console.log("Login Success:", response.data);
+    //   console.log("Login Success:", response.data);
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
       axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access}`;
