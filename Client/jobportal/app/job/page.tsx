@@ -101,6 +101,7 @@ export default function Home() {
               <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/900 transition-colors">
                 Apply Now
               </button>
+              <Badge variant="outline" className="ml-2">{job.posted_by.username}</Badge>
             </CardFooter>
           </Card>
         ))

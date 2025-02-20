@@ -138,16 +138,19 @@ export default function SignupForm({
                 {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <Label htmlFor="is_employer">Are you an Employer?</Label>
                 <input id="is_employer" name="is_employer" type="checkbox" checked={formData.is_employer} onChange={handleChange} className="w-5 h-5" />
-              </div>
+              </div> */}
 
               {serverError && <p className="text-red-500 text-sm text-center">{serverError}</p>}
 
               <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600" disabled={loading}>
                 {loading ? "Signing up..." : "Signup"}
               </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              Already have the account? <a href="/login" className="underline">Login</a>
             </div>
           </form>
         </CardContent>
