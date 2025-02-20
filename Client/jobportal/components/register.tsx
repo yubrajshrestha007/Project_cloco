@@ -79,14 +79,14 @@ export default function SignupForm({
   }),
 });
 const data=await response.json();
-
-      if (response.ok) {
+console.log("Data: ", data)
+      if (response.status === 201) {
         alert("User registered successfully!");
         // console.log('User created:', data);
         router.push('/login');
       } else {
         if (data.errors) {
-            setServerError(data.error);
+            setServerError(data.errors.username);
       } else {
             setServerError(data.detail || "Signup failed. Please try again.");
       }
