@@ -1,0 +1,10 @@
+register_user:
+If a user tries to register with a duplicate username, create_user() will raise an error, but it won't be handled properly in the serializer.
+If a user tries to register with a duplicate email, it will not raise an error because emails are not unique by default in Django's AbstractUser.
+
+password:
+Django uses the PBKDF2 algorithm (by default)
+pbkdf2_sha256 → Algorithm
+870000 → Number of iterations
+Xy3fKzNuQ2pg → Salt
+B2fHAB2f3H23fAB2vQ8== → Hashed password

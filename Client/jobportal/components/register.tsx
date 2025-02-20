@@ -34,7 +34,7 @@ export default function SignupForm({
     setErrors({});
     setServerError("");
     let valid = true;
-    const newErrors: { name?: string; email?: string; password?: string } = {};
+    const newErrors: { name?: string; email?: string; password?: string ; address?: string } = {};
 
     // Validate Name
     if (!formData.name.trim()) {
@@ -78,14 +78,18 @@ export default function SignupForm({
     is_employer: formData.is_employer,
   }),
 });
-// const data=await response.json();
+const data=await response.json();
 
       if (response.ok) {
         alert("User registered successfully!");
         // console.log('User created:', data);
         router.push('/login');
       } else {
-        throw new Error(response.statusText);
+        if (data.errors) {
+            setServerError(data.error);
+      } else {
+            setServerError(data.detail || "Signup failed. Please try again.");
+      }
       }
     } catch (error) {
       console.error("Signup Error:", error);

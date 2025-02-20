@@ -93,9 +93,9 @@ export default function Home() {
               </CardTitle>
               <CardDescription>{job.company}</CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow">
+            {/* <CardContent className="flex-grow">
               <p className="text-sm text-gray-600">{job.description}</p>
-            </CardContent>
+            </CardContent> */}
             <CardFooter className="flex justify-between items-center pt-4 border-t">
               <p className="font-medium">{job.salary ? `$${job.salary.toLocaleString()}` : 'Salary not specified'}</p>
               <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/900 transition-colors">
