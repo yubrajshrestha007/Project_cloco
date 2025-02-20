@@ -1,6 +1,5 @@
+from django.conf import settings
 from django.db import models
-from users.models import User
-
 
 class Job(models.Model):
     title = models.CharField(max_length=255)
@@ -8,22 +7,21 @@ class Job(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
-    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     posted_at = models.DateTimeField(auto_now_add=True)
-
-    SOFTWARE_DEVELOPMENT = 'Software Development'
-    DATA_SCIENCE = 'Data Science'
-    PRODUCT_MANAGEMENT = 'Product Management'
-    DESIGN = 'Design'
-    MARKETING = 'Marketing'
-    OTHER = 'Other'
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Update here
 
     CATEGORY_CHOICES = [
-        (SOFTWARE_DEVELOPMENT, SOFTWARE_DEVELOPMENT),
-        (DATA_SCIENCE, DATA_SCIENCE),
-        (PRODUCT_MANAGEMENT, PRODUCT_MANAGEMENT),
-        (DESIGN, DESIGN),
-        (MARKETING, MARKETING),
+        ('Software Development', 'Software Development'),
+        ('Data Science', 'Data Science'),
+        ('Product Management', 'Product Management'),
+        ('Design', 'Design'),
+        ('Marketing', 'Marketing'),
+        ('Other', 'Other'),
     ]
+    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, default='Other')
 
-    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES,default=OTHER)
+    contact = models.CharField(max_length=15, null=True, blank=True)  # Allow null values
+    email = models.EmailField(null=True, blank=True)  # Allow null values
+
+    def __str__(self):
+        return self.title

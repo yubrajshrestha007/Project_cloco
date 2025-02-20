@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
     # Fields to display in the user detail page, grouped by category
     fieldsets = (
         ('User  Details', {
-            'fields': ('username', 'email', 'password')
+            'fields': ('username', 'email', 'password','Address')
         }),
         ('Employer Status', {
             'fields': ('is_employer',)

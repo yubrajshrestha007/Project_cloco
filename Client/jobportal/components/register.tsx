@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-// import axios from "axios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,19 +13,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from 'next/navigation';
 
-
 export default function SignupForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "",address:'', is_employer: false });
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string ; address?: string }>({});
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    address: "",
+    is_employer: false
+  });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; address?: string }>({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,7 +42,7 @@ export default function SignupForm({
     setErrors({});
     setServerError("");
     let valid = true;
-    const newErrors: { name?: string; email?: string; password?: string ; address?: string } = {};
+    const newErrors: { name?: string; email?: string; password?: string; address?: string } = {};
 
     // Validate Name
     if (!formData.name.trim()) {
@@ -66,30 +74,27 @@ export default function SignupForm({
     setLoading(true);
     try {
       const response = await fetch('http://localhost:8000/api/users/register/', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    username: formData.name,
-    email: formData.email,
-    password: formData.password,
-    Address:formData.address,
-    is_employer: formData.is_employer,
-  }),
-});
-const data=await response.json();
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.name,
+          email: formData.email,
+          password: formData.password,
+          address: formData.address,
+          is_employer: formData.is_employer,
+        }),
+      });
 
-      if (response.ok) {
+      const data = await response.json();
+      console.log("Data: ", data);
+
+      if (response.status === 201) {
         alert("User registered successfully!");
-        // console.log('User created:', data);
         router.push('/login');
       } else {
-        if (data.errors) {
-            setServerError(data.error);
-      } else {
-            setServerError(data.detail || "Signup failed. Please try again.");
-      }
+        setServerError(data.errors?.username || data.detail || "Signup failed. Please try again.");
       }
     } catch (error) {
       console.error("Signup Error:", error);
@@ -98,7 +103,6 @@ const data=await response.json();
       setLoading(false);
     }
   };
-
 
   return (
     <div className={cn("flex flex-col gap-6 min-h-screen justify-center items-center", className)} {...props}>
@@ -111,18 +115,20 @@ const data=await response.json();
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">UserName</Label>
                 <Input id="name" name="name" type="text" placeholder="Enter Your Name" value={formData.name} onChange={handleChange} className="bg-white text-black border-gray-300" />
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
               </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} className="bg-white text-black border-gray-300" />
                 {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
               </div>
+
               <div className="grid gap-2">
-              <Label htmlFor="address">Address</Label>
-                <Input id="email" name="address" type="text" placeholder="" value={formData.address} onChange={handleChange} className="bg-white text-black border-gray-300" />
+                <Label htmlFor="address">Address</Label>
+                <Input id="address" name="address" type="text" placeholder="Address" value={formData.address} onChange={handleChange} className="bg-white text-black border-gray-300" />
                 {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
               </div>
 
@@ -131,10 +137,20 @@ const data=await response.json();
                 <Input id="password" name="password" type="password" placeholder="Enter Your Password" value={formData.password} onChange={handleChange} className="bg-white text-black border-gray-300 focus:border-green-500" />
                 {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
               </div>
+
+              {/* <div className="flex items-center gap-2">
+                <Label htmlFor="is_employer">Are you an Employer?</Label>
+                <input id="is_employer" name="is_employer" type="checkbox" checked={formData.is_employer} onChange={handleChange} className="w-5 h-5" />
+              </div> */}
+
               {serverError && <p className="text-red-500 text-sm text-center">{serverError}</p>}
+
               <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600" disabled={loading}>
                 {loading ? "Signing up..." : "Signup"}
               </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              Already have the account? <a href="/login" className="underline">Login</a>
             </div>
           </form>
         </CardContent>
