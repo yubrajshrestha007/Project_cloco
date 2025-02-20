@@ -1,19 +1,43 @@
-import Link from 'next/link';
+'use client'
+import NavBar from '@/components/custom/navigation/header';
+import { useState, useEffect } from 'react';
 
-const Profile = ({profile}) => {
-  const handleLogout = () => {
-    localStorage.removeItem('access');
-  };
+const Profile = () => {
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/users/profile/', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access')}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => setProfile(data))
+      .catch(error => console.error(error));
+  }, [])
 
   return (
-    <div>
-      <h2>Profile</h2>
-      <p>Username: {profile.username}</p>
-      <p>Email: {profile.email}</p>
-      <p>Address: {profile.Address}</p>
-      <Link href="/login">
-        <button onClick={handleLogout}>Logout</button>
-      </Link>
+    <div className='container mx-auto py-8'>
+      <NavBar />
+      <div className='flex flex-col items-center justify-center border-2 p-6 m-6 rounded-lg shadow-lg'>
+        <h2 className='font-extrabold text-3xl text-primary mb-6'>Your Details</h2>
+        {profile ? (
+          <div className='text-lg space-y-3'>
+            <p className='text-gray-700'>
+              <strong>Username : </strong> {profile.username}
+            </p>
+            <p className='text-gray-700'>
+              <strong>Email : </strong> {profile.email}
+            </p>
+            <p className='text-gray-700'>
+              <strong>Address : </strong> {profile.Address}
+            </p>
+          </div>
+        ) : (
+          <p className='text-lg text-gray-500'>Loading profile...</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -74,7 +74,7 @@ export default function Home() {
     <NavBar />
     <h1 className="text-3xl font-bold mb-6">Job Listings</h1>
     <input type="search" value={searchQuery} onChange={handleSearchChange} placeholder="Search jobs" className="w-full mb-4" />
-    <select value={selectedCategory} onChange={handleCategoryChange} className="w-full mb-4">
+    <select value={selectedCategory} onChange={handleCategoryChange} className="mb-4">
       <option value="">All Categories</option>
       {categories.map(category => (
         <option key={category} value={category}>
