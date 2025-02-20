@@ -14,7 +14,6 @@ from .serializers import JobSerializer
 
 @api_view(['GET'])
 def job_list(request):
-    print(request.headers)
     jobs = Job.objects.all()
     serializer = JobSerializer(jobs, many=True)
     return Response(serializer.data)

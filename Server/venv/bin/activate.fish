@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/mint/Desktop/JobPortal/Server/venv
+set -gx VIRTUAL_ENV /home/mint/Desktop/Job/Project_cloco/Server/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

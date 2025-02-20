@@ -3,5 +3,5 @@ from django.db import models
 
 
 class User(AbstractUser):
-    Address=models.CharField(default='',max_length=255)
+    address = models.CharField(max_length=255, null=True, blank=True)  # Ensure this exists
     is_employer = models.BooleanField(default=False)

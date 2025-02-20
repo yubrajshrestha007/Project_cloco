@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
     User admin interface
     """
     # Display fields in the user list
-    list_display = ('username', 'email','Address', 'is_employer')
+    list_display = ('username', 'email','address', 'is_employer')
 
     # Fields to search in the user list
     search_fields = ('username', 'email')
@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
     # Fields to display in the user detail page, grouped by category
     fieldsets = (
         ('User  Details', {
-            'fields': ('username', 'email', 'password','Address')
+            'fields': ('username', 'email', 'password','address')
         }),
         ('Employer Status', {
             'fields': ('is_employer',)

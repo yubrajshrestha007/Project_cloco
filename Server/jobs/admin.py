@@ -16,7 +16,7 @@ class JobAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Job Details', {
-            'fields': ('title', 'company', 'description', 'location', 'salary', 'contact', 'email', 'posted_by')
+            'fields': ('title', 'company', 'description', 'location', 'salary', 'posted_by')
         }),
         ('Category', {
             'fields': ('category',)

@@ -20,8 +20,8 @@ class Job(models.Model):
     ]
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES, default='Other')
 
-    contact = models.CharField(max_length=15, null=True, blank=True)  # Allow null values
-    email = models.EmailField(null=True, blank=True)  # Allow null values
+    # contact = models.CharField(max_length=15, null=True, blank=True, default=0)  # Allow null values
+    # email = models.EmailField(null=True, blank=True)  # Allow null values
 
     def __str__(self):
         return self.title
