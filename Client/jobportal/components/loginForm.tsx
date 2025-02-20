@@ -44,7 +44,7 @@ const LoginPage = ({ className, ...props }) => {
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
       axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access}`;
-      window.location.href = "/job";
+      window.location.href = "/";
     } catch (error) {
       console.error("Login Error:", error.response);
       setError(error.response?.data?.error || "Login failed. Please try again.");
@@ -87,9 +87,6 @@ const LoginPage = ({ className, ...props }) => {
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
-            </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
             </Button>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account? <a href="/register" className="underline">Register</a>

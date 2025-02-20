@@ -8,12 +8,12 @@ export default function About() {
       <section className="text-center py-16">
         <h1 className="text-4xl font-black  mb-4">About Us</h1>
         <p className="text-lg max-w-2xl mx-auto">
-          Welcome to <span className="font-bold text-yellow-500">JobPortal</span>, your trusted platform for finding the perfect job opportunities.  
+          Welcome to <span className="font-bold text-yellow-500">JobPortal</span>, your trusted platform for finding the perfect job opportunities.
           Our mission is to connect job seekers with top employers, making job hunting simple and efficient.
         </p>
       </section>
 
-      
+
 
       <section className="py-12">
         <div className="max-w-4xl mx-auto">

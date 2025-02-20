@@ -31,7 +31,7 @@ const Profile = () => {
               <strong>Email : </strong> {profile.email}
             </p>
             <p className='text-gray-700'>
-              <strong>Address : </strong> {profile.Address}
+              <strong>Address : </strong> {profile.address}
             </p>
           </div>
         ) : (

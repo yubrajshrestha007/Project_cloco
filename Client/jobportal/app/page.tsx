@@ -11,35 +11,38 @@ import Model from "@/components/model";
 
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<String | null>(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showModel, setshowModel] = useState(false);
   const [viewData, setViewData] = useState<Job>();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    axios.get("http://localhost:8000/api/jobs/jobs")
+    axios.get("http://localhost:8000/api/jobs/jobs/",
+{
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem('access')}` },
+          withCredentials: true, // Ensures cookies are sent
+        }
+    )
       .then(response => {
+        if(response.status === 200){
+            setIsAuthenticated(true)
+        }
         setJobs(response.data);
         const categories = Array.from(new Set(response.data.map(job => job.category)));
         setCategories(categories);
-        setLoading(false);
       })
-      .catch(error => {
-        console.error(error);
-        setError("Failed to fetch job listings");
-        setLoading(false);
-      });
+      .catch(error => console.log(error));
   }, []);
 
-  if (loading) {
+  if (!isAuthenticated) {
     return (
-      <div className="container mx-auto py-8">
-        <h1 className="text-3xl font-bold mb-6">Job Listings</h1>
-        <p>Loading job listings...</p>
+      <div className="container mx-auto">
+        <h1 className="text-3xl font-bold">You are not authenticated</h1>
+        <p>Please login to access the job listings</p>
+        <a href="/login">login</a>
       </div>
     );
   }
@@ -103,33 +106,38 @@ export default function Home() {
         ))}
       </select>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredJobs.map(job => (
-          <Card key={job.id} className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex justify-between items-start">
-                <div>{job.title}</div>
-                <Badge variant="outline" className="ml-2">{job.location}</Badge>
-              </CardTitle>
-              <CardDescription>{job.company}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <p className="text-sm text-gray-600">{job.description}</p>
-            </CardContent>
-            <CardFooter className="flex justify-between items-center pt-4 border-t">
-              <p className="font-medium">{job.salary ? `$${job.salary.toLocaleString()}` : 'Salary not specified'}</p>
-              <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/900 transition-colors"
-                onClick={() => handleView(job.id)}
-              >
-                View Details
-              </button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+  {filteredJobs.length > 0 ? (
+    filteredJobs.map(job => (
+      <Card key={job.id} className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow">
+        <CardHeader>
+          <CardTitle className="flex justify-between items-start">
+            <div>{job.title}</div>
+            <Badge variant="outline" className="ml-2">{job.location}</Badge>
+          </CardTitle>
+          <CardDescription>{job.company}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="text-sm text-gray-600">{job.description}</p>
+        </CardContent>
+        <CardFooter className="flex justify-between items-center pt-4 border-t">
+          <p className="font-medium">{job.salary ? `$${job.salary.toLocaleString()}` : 'Salary not specified'}</p>
+          <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/900 transition-colors"
+            onClick={() => handleView(job.id)}
+          >
+            View Details
+          </button>
+        </CardFooter>
+      </Card>
+    ))
+  ) : (
+    <p className="text-center text-lg text-gray-500 col-span-full">No job listings found matching your search.</p>
+  )}
+</div>
+
       {jobs.length === 0 && <p>No job listings found.</p>}
       <Model isVisible={showModel} onClose={() => setshowModel(false)}>
         <div className="modal-content">
-          {viewData ? ( 
+          {viewData ? (
             <div className="job-details p-6 m-6">
               <h3 className="text-2xl font-semibold text-primary">{viewData.title}</h3>
               <p className="text-lg "><strong>Company:</strong> {viewData.company}</p>
