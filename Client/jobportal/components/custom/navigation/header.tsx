@@ -1,5 +1,5 @@
-import Dropdown from "@/components/dropdownMenu";
-import ThemeToggle from "@/components/themeToggle";
+import Dropdown from "@/components/custom/navigation/dropdownMenu";
+import ThemeToggle from "@/components/auth/themeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
 import React, { useState, useEffect } from 'react';

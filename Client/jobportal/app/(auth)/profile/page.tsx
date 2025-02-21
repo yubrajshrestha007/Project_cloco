@@ -1,11 +1,15 @@
 'use client'
 import NavBar from '@/components/custom/navigation/header';
 import { useState, useEffect } from 'react';
-
+import { User } from '../../../interface'
 const Profile = () => {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<User | null>(null);
 
   useEffect(() => {
+    getProfile()
+  }, [])
+
+  const getProfile = () => {
     fetch('http://localhost:8000/api/users/profile/', {
       method: 'GET',
       headers: {
@@ -13,10 +17,13 @@ const Profile = () => {
       },
     })
       .then(response => response.json())
-      .then(data => setProfile(data))
+      .then(data => {
+        setProfile(data)
+      })
       .catch(error => console.error(error));
-  }, [])
+  }
 
+  
   return (
     <div className='container mx-auto py-8'>
       <NavBar />

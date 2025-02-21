@@ -7,5 +7,14 @@ export interface Job {
   salary: number;
   category: string;
   posted_at: string;
-  posted_by: string;
+  posted_by: {
+    username: String;
+    email: String;
+  }
+}
+
+export interface User {
+  username: String;
+  email: String;
+  address: String;
 }
