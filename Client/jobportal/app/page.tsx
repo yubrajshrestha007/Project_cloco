@@ -8,6 +8,9 @@ import { Job } from "../interface";
 import NavBar from "@/components/custom/navigation/header";
 import HeroSection from "@/components/heroSection";
 import Model from "@/components/model";
+import { formatDistanceToNow } from 'date-fns';
+
+
 
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -39,11 +42,19 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto">
-        <h1 className="text-3xl font-bold">You are not authenticated</h1>
-        <p>Please login to access the job listings</p>
-        <a href="/login">login</a>
-      </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-sm text-center">
+    <h1 className="text-3xl font-bold text-red-600 mb-4">You are not authenticated</h1>
+    <p className="text-gray-700 mb-6">Please login to access the job listings</p>
+    <a
+      href="/login"
+      className="inline-block px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
+    >
+      Login
+    </a>
+  </div>
+</div>
+
     );
   }
 
@@ -144,6 +155,15 @@ export default function Home() {
               <p className="text-lg "><strong>Description:</strong> {viewData.description}</p>
               <p className="text-lg "><strong>Location:</strong> {viewData.location}</p>
               <p className="text-lg "><strong>Salary:</strong> {viewData.salary}</p>
+              <p className="text-lg"><strong>Posted By:</strong> {viewData.posted_by?.username}</p>
+              <p className="text-lg"><strong>HR Manager contact:</strong> {viewData.posted_by?.email}</p>
+              <p className="text-lg">
+                    <strong>Posted At:</strong> {viewData.posted_at ? formatDistanceToNow(new Date(viewData.posted_at), { addSuffix: true }) : 'N/A'}
+                </p>
+{/* <p className="text-lg">
+    <strong>Posted At:</strong> {viewData.posted_at ? formatDistanceToNow(new Date(viewData.posted_at), { addSuffix: true }) : 'N/A'}
+</p> */}
+
             </div>
           ) : (
             <p className="text-center text-lg text-gray-500">No job data available.</p>
