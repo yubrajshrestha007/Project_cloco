@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, UpdateUserSerializer
 
 User = get_user_model()
 
@@ -50,3 +50,19 @@ def login_user(request):
 def get_user_profile(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    """
+    Update user profile.
+    """
+    serializer = UpdateUserSerializer(
+        request.user, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    print(serializer.errors)
+    return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

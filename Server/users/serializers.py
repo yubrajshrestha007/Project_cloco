@@ -1,5 +1,8 @@
 # serializers.py
 from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework import status
+from .models import User
 from django.contrib.auth import get_user_model
 
 User   = get_user_model()
@@ -19,3 +22,24 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'address', 'is_employer']
+        extra_kwargs = {
+            'username': {'required': False},
+            'email': {'required': False},
+            'address': {'required': False},
+            'is_employer': {'required': False},
+        }
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.address = validated_data.get('address', instance.address)
+        instance.is_employer = validated_data.get(
+            'is_employer', instance.is_employer)
+        instance.save()
+        return instance
