@@ -90,7 +90,7 @@ export default function SignupForm({
       const data = await response.json();
       console.log("Data: ", data);
 
-      if (response.status === 201) {
+      if (response.ok) {
         alert("User registered successfully!");
         router.push('/login');
       } else {
