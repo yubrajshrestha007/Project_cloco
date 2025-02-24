@@ -11,31 +11,62 @@ import CardSection from "@/components/common/cardSection";
 
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showModel, setshowModel] = useState(false);
   const [viewData, setViewData] = useState<Job>();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // New state for loading check
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/jobs/jobs/",
-      {
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem('access')}` },
-        withCredentials: true, // Ensures cookies are sent
-      }
-    )
-      .then(response => {
-        if (response.status === 200) {
-          setIsAuthenticated(true)
-        }
+    const token = localStorage.getItem('access');
+
+    if (!token) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+
+    axios.get("http://localhost:8000/api/jobs/jobs/", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      withCredentials: true,
+    })
+    .then(response => {
+      if (response.status === 200) {
+        setIsAuthenticated(true);
         setJobs(response.data);
-        const categories:string[] = Array.from(new Set(response.data.map((job:Job) => job.category)));
+
+        const categories: string[] = Array.from(new Set(response.data.map((job: Job) => job.category)));
         setCategories(categories);
-      })
-      .catch(error => console.log(error));
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching jobs:", error);
+      setIsAuthenticated(false);
+
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('access');
+        window.location.href = "/login";
+      }
+    })
+    .finally(() => {
+      setLoading(false); // Mark authentication check as complete
+    });
   }, []);
+
+  // ✅ Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-lg font-semibold text-gray-600">Loading...</div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -51,7 +82,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
     );
   }
 
@@ -63,6 +93,7 @@ export default function Home() {
       </div>
     );
   }
+
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value);
   };
@@ -88,16 +119,14 @@ export default function Home() {
   };
 
   const handleView = (id: number) => {
-    setshowModel(true)
-    console.log(id)
-    const foundJob = jobs.find((job) => job.id === id)
-    console.log(foundJob)
-    setViewData(foundJob)
-  }
+    setshowModel(true);
+    const foundJob = jobs.find((job) => job.id === id);
+    setViewData(foundJob);
+  };
 
-  const filteredJobs = searchJobs(jobs, searchQuery, selectedCategory)
+  const filteredJobs = searchJobs(jobs, searchQuery, selectedCategory);
+
   return (
-
     <div className="container mx-auto py-8">
       <NavBar />
       <HeroSection searchQuery={searchQuery} handleSearchChange={handleSearchChange} />
@@ -126,9 +155,6 @@ export default function Home() {
               <p className="text-lg">
                 <strong>Posted At:</strong> {viewData.posted_at ? formatDistanceToNow(new Date(viewData.posted_at), { addSuffix: true }) : 'N/A'}
               </p>
-              {/* <p className="text-lg">
-    <strong>Posted At:</strong> {viewData.posted_at ? formatDistanceToNow(new Date(viewData.posted_at), { addSuffix: true }) : 'N/A'}
-</p> */}
             </div>
           ) : (
             <p className="text-center text-lg text-gray-500">No job data available.</p>
