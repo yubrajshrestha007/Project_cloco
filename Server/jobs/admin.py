@@ -9,14 +9,14 @@ class JobAdmin(admin.ModelAdmin):
     Job admin interface
     """
     # Display fields in the job list
-    list_display = ('title', 'company', 'category', 'posted_at', 'employer_name')
+    list_display = ('id','title', 'company', 'category', 'posted_at', 'employer_name')
     list_filter = ('category', 'posted_at')
     search_fields = ('title', 'company', 'description', 'location')
     list_per_page = 20  # Adjust this number as necessary
 
     fieldsets = (
         ('Job Details', {
-            'fields': ('title', 'company', 'description', 'location', 'salary', 'posted_by')
+            'fields': ('id','title', 'company', 'description', 'location', 'salary', 'posted_by')
         }),
         ('Category', {
             'fields': ('category',)

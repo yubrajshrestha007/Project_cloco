@@ -8,12 +8,13 @@ const Profile = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false); // New state for admin check
   const [editMode, setEditMode] = useState(false);
   const [error, setError] = useState<{ [key: string]: string } | null>(null);
 
   useEffect(() => {
-    getProfile()
-  }, [])
+    getProfile();
+  }, []);
 
   const getProfile = () => {
     fetch('http://localhost:8000/api/users/profile/', {
@@ -24,60 +25,54 @@ const Profile = () => {
     })
       .then(response => response.json())
       .then(data => {
-        setProfile(data)
-        setUsername(data.username)
-        setEmail(data.email)
-        setAddress(data.address)
+        setProfile(data);
+        setUsername(data.username);
+        setEmail(data.email);
+        setAddress(data.address);
+        setIsAdmin(data.is_superuser || data.is_staff); // Check if the user is admin
       })
       .catch(error => console.error(error));
   }
 
-const updateProfile = () => {
-  fetch('http://localhost:8000/api/users/profile/update', {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('access')}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username,
-      email,
-      address
+  const updateProfile = () => {
+    fetch('http://localhost:8000/api/users/profile/update', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access')}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        address
+      })
     })
-  })
-    .then(async response => {
-      const data = await response.json();
-      if (!response.ok) {
-        throw data;  // Throw the API response if there's an error
-      }
-      return data;
-    })
-    .then(data => {
-      setProfile(data);
-      setEditMode(false);
-      setError(null);
-    })
-    .catch(errorData => {
-//   console.error("Update Profile Error:", errorData);
-
-  if (errorData?.errors) {
-    // Extract errors and format them correctly
-    const formattedErrors: { [key: string]: string } = {};
-
-    Object.keys(errorData.errors).forEach(key => {
-      if (Array.isArray(errorData.errors[key])) {
-        formattedErrors[key] = errorData.errors[key][0]; // Get the first error message
-      }
-    });
-
-    setError(formattedErrors);
-  } else {
-    setError({ general: "An unexpected error occurred." });
-  }
-});
-
-
-};
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          throw data;  // Throw the API response if there's an error
+        }
+        return data;
+      })
+      .then(data => {
+        setProfile(data);
+        setEditMode(false);
+        setError(null);
+      })
+      .catch(errorData => {
+        if (errorData?.errors) {
+          const formattedErrors: { [key: string]: string } = {};
+          Object.keys(errorData.errors).forEach(key => {
+            if (Array.isArray(errorData.errors[key])) {
+              formattedErrors[key] = errorData.errors[key][0]; // Get the first error message
+            }
+          });
+          setError(formattedErrors);
+        } else {
+          setError({ general: "An unexpected error occurred." });
+        }
+      });
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -97,7 +92,7 @@ const updateProfile = () => {
   }
 
   const handleEditMode = () => {
-    setEditMode(true)
+    setEditMode(true);
   }
 
   return (
@@ -110,50 +105,42 @@ const updateProfile = () => {
             {editMode ? (
               <div>
                 <label>UserName:
-  <input
-    type="text"
-    name="username"
-    value={username}
-    onChange={handleInputChange}
-    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-  />
-  {error?.username && <p className="text-red-500 text-sm">{error.username}</p>}
-</label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={handleInputChange}
+                    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  {error?.username && <p className="text-red-500 text-sm">{error.username}</p>}
+                </label>
 
-<label>Email:
-  <input
-    type="email"
-    name="email"
-    value={email}
-    onChange={handleInputChange}
-    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-  />
-  {error?.email && <p className="text-red-500 text-sm">{error.email}</p>}
-</label>
+                <label>Email:
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={handleInputChange}
+                    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  {error?.email && <p className="text-red-500 text-sm">{error.email}</p>}
+                </label>
 
-<label>Address:
-  <input
-    type="text"
-    name="address"
-    value={address}
-    onChange={handleInputChange}
-    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-  />
-</label>
+                <label>Address:
+                  <input
+                    type="text"
+                    name="address"
+                    value={address}
+                    onChange={handleInputChange}
+                    className="block w-full p-2 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </label>
 
-{error?.general && <p className="text-red-500 text-sm">{error.general}</p>}
-
-
-
+                {error?.general && <p className="text-red-500 text-sm">{error.general}</p>}
                 <button onClick={updateProfile}>
                   Save
                 </button>
-                {error && error.general && (
-                    <div>
-                        <p>{error.general}</p>
-                    </div>
-                    )}
-                </div>
+              </div>
             ) : (
               <div>
                 <p className='text-gray-700'>
@@ -165,6 +152,11 @@ const updateProfile = () => {
                 <p className='text-gray-700'>
                   <strong>Address : </strong> {address}
                 </p>
+                {isAdmin && (
+                  <a href="/Adminjobs" className="text-blue-500 hover:underline">
+                    Manage Posts
+                  </a>
+                )}
                 <button onClick={handleEditMode}>
                   Edit
                 </button>

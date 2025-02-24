@@ -1,23 +1,22 @@
-# serializers.py
 from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework import status
-from .models import User
 from django.contrib.auth import get_user_model
 
-User   = get_user_model()
+User = get_user_model()
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email','address', 'is_employer']
+        fields = ['id', 'username', 'email', 'address',
+                  'is_employer', 'is_superuser', 'is_staff']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ['username', 'email','address', 'password', 'is_employer']
+        fields = ['username', 'email', 'address', 'password', 'is_employer']
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

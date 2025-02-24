@@ -8,13 +8,15 @@ export interface Job {
   category: string;
   posted_at: string;
   posted_by: {
-    username: String;
-    email: String;
+    id:number;
+    username: string;
+    email: string;
   }
 }
 
 export interface User {
-  username: String;
-  email: String;
-  address: String;
+    id: number;
+  username: string;
+  email: string;
+  address: string;
 }
