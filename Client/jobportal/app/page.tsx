@@ -8,8 +8,10 @@ import HeroSection from "@/components/common/heroSection";
 import Model from "@/components/common/model";
 import { formatDistanceToNow } from 'date-fns';
 import CardSection from "@/components/common/cardSection";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
@@ -52,6 +54,8 @@ export default function Home() {
       if (error.response && error.response.status === 401) {
         localStorage.removeItem('access');
         window.location.href = "/login";
+      } else {
+        setError("Failed to fetch jobs. Please try again later.");
       }
     })
     .finally(() => {
@@ -124,6 +128,11 @@ export default function Home() {
     setViewData(foundJob);
   };
 
+  const handleApply = (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
+    event.preventDefault();
+    router.push(`/Applications/${id}`);
+  };
+
   const filteredJobs = searchJobs(jobs, searchQuery, selectedCategory);
 
   return (
@@ -139,7 +148,7 @@ export default function Home() {
           </option>
         ))}
       </select>
-      <CardSection filteredJobs={filteredJobs} handleView={handleView} />
+      <CardSection filteredJobs={filteredJobs} handleView={handleView} handleApply={handleApply} />
       {jobs.length === 0 && <p>No job listings found.</p>}
       <Model isVisible={showModel} onClose={() => setshowModel(false)}>
         <div className="modal-content">

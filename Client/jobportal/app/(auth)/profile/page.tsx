@@ -8,7 +8,6 @@ const Profile = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false); // New state for admin check
   const [editMode, setEditMode] = useState(false);
   const [error, setError] = useState<{ [key: string]: string } | null>(null);
 
@@ -29,7 +28,6 @@ const Profile = () => {
         setUsername(data.username);
         setEmail(data.email);
         setAddress(data.address);
-        setIsAdmin(data.is_superuser || data.is_staff); // Check if the user is admin
       })
       .catch(error => console.error(error));
   }
@@ -152,11 +150,6 @@ const Profile = () => {
                 <p className='text-gray-700'>
                   <strong>Address : </strong> {address}
                 </p>
-                {isAdmin && (
-                  <a href="/Adminjobs" className="text-blue-500 hover:underline">
-                    Manage Posts
-                  </a>
-                )}
                 <button onClick={handleEditMode}>
                   Edit
                 </button>
