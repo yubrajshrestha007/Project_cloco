@@ -1,0 +1,21 @@
+steps:
+postgresql should be installed in the system.
+    To run :
+    1. Open terminal.
+    2. type sudo su postgres
+    6. type psql
+    7. type CREATE DATABASE jobportal;
+    8. type \q
+Then:
+Go to backend setting.py.
+Add the following code to the settings.py file:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jobportal',
+        'USER': 'Yout_user',
+        'PASSWORD': 'Your_password',
+        'HOST': 'localhost',
+        'PORT': '5432',  # Default PostgreSQL port
+    }
+}
