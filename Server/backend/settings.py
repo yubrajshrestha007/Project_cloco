@@ -104,10 +104,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jobportal',
+        'USER': 'postgres',
+        'PASSWORD': 'mint',
+        # Use the correct hostname (e.g., your cloud DB address if not local)
+        'HOST': 'localhost',
+        'PORT': '5432',  # Default PostgreSQL port
     }
 }
+
 
 AUTH_USER_MODEL='users.User'
 # Password validation

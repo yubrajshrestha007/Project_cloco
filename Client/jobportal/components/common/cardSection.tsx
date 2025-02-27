@@ -6,7 +6,7 @@ interface CardProps {
     handleView: (id:number) => void;
 }
 
-const CardSection = ({filteredJobs, handleView}: CardProps) => {
+const CardSection = ({filteredJobs, handleView }: CardProps) => {
     console.log(filteredJobs)
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

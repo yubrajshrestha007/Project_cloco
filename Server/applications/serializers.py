@@ -5,4 +5,5 @@ from .models import Application
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = '__all__'
+        # Exclude `user` (set automatically)
+        fields = ['job', 'cover_letter', 'resume']
