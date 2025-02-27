@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Job } from "../interface";
-import NavBar from "@/components/custom/navigation/header";
+import NavBar from "@/components/header/header";
 import HeroSection from "@/components/common/heroSection";
 import Model from "@/components/common/model";
 import { formatDistanceToNow } from 'date-fns';
 import CardSection from "@/components/common/cardSection";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -36,34 +37,34 @@ export default function Home() {
       },
       withCredentials: true,
     })
-    .then(response => {
-      if (response.status === 200) {
-        setIsAuthenticated(true);
-        setJobs(response.data);
+      .then(response => {
+        if (response.status === 200) {
+          setIsAuthenticated(true);
+          setJobs(response.data);
 
-        const categories: string[] = Array.from(new Set(response.data.map((job: Job) => job.category)));
-        setCategories(categories);
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching jobs:", error);
-      setIsAuthenticated(false);
+          const categories: string[] = Array.from(new Set(response.data.map((job: Job) => job.category)));
+          setCategories(categories);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching jobs:", error);
+        setIsAuthenticated(false);
 
-      if (error.response && error.response.status === 401) {
-        localStorage.removeItem('access');
-        window.location.href = "/login";
-      }
-    })
-    .finally(() => {
-      setLoading(false); // Mark authentication check as complete
-    });
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem('access');
+          window.location.href = "/login";
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  // ✅ Show loading state while checking authentication
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-lg font-semibold text-gray-600">Loading...</div>
+        <Loader2 size={80} className="animate-spin" />
       </div>
     );
   }
@@ -127,9 +128,14 @@ export default function Home() {
   const filteredJobs = searchJobs(jobs, searchQuery, selectedCategory);
 
   return (
-    <div className="container mx-auto py-8">
-      <NavBar />
-      <HeroSection searchQuery={searchQuery} handleSearchChange={handleSearchChange} />
+    <div>
+      <div className="container mx-auto py-8">
+        <NavBar />
+      </div>
+      <div>
+        <HeroSection searchQuery={searchQuery} handleSearchChange={handleSearchChange} />
+      </div>
+      <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Job Listings</h1>
       <select value={selectedCategory} onChange={handleCategoryChange} className="mb-4">
         <option value="">All Categories</option>
@@ -161,6 +167,7 @@ export default function Home() {
           )}
         </div>
       </Model>
+        </div>
     </div>
   );
 }
