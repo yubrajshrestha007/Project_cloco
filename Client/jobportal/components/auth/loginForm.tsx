@@ -13,18 +13,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface LoginPageProps {
-  className?: string;
-  [key: string]: unknown;
-}
-
-const LoginPage = ({ className, ...props }: LoginPageProps) => {
+const LoginPage = ({ className, ...props }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
 
