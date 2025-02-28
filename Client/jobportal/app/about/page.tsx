@@ -1,5 +1,5 @@
 'use client'
-import NavBar from "@/components/custom/navigation/header";
+import NavBar from "@/components/header/header";
 
 export default function About() {
   return (
