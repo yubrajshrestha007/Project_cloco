@@ -8,7 +8,7 @@ export default function useAuth() {
 
   useEffect(() => {
     const token = localStorage.getItem('access');
-    
+
     if (!token) {
       setIsAuthenticated(false);
       setLoading(false);
@@ -16,7 +16,7 @@ export default function useAuth() {
     }
 
     // Verify token validity
-    axios.get("http://localhost:8000/api/users/profile/", {
+    axios.get("http://localhost:8000/api/jobs/admin/jobs/", {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(() => {

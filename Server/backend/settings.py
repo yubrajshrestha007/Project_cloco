@@ -38,13 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt'
+
 ]
 EXTERNAL_APP =[
     'users',
     'jobs',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt',
     'applications'
 ]
 INSTALLED_APPS += EXTERNAL_APP
